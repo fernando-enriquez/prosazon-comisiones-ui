@@ -1,0 +1,85 @@
+.header {
+    background-color: #004B9C;
+}
+
+.entries-input {
+    width: 50px;
+}
+
+a {
+    cursor:pointer;
+}
+
+.table>thead>tr>th {
+    overflow: hidden;
+    white-space: initial;
+
+}
+
+.table>tbody>tr>td {
+    overflow: hidden;
+    white-space: initial;
+}
+
+.table {
+    width: 100%;
+}
+
+.inputI:read-only {
+    background-color: #f6f9fc;
+}
+
+.custom-file-input ~ .custom-file-label::after {
+    content: "Buscar";
+}
+
+.contenedor-paginacion {
+    white-space: nowrap;
+    width: 500px;
+    height: 60px;
+    overflow-x: scroll;
+}
+
+.contenedor-paginacion li{
+    display: inline-block;
+}
+
+.cantidad-registros{
+    margin-top: 8px;
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+.dia-col {
+    width: 65px!important; /* Cambia este valor según tus necesidades */
+    text-align: center!important;
+  }
+
+  .selected-item{
+    max-width: none !important;
+    margin-top: 2px;
+}
+
+.form-control-xsm {
+    height: calc(0.25em + 1rem + 4px);
+}
+
+.form-control-xsm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+}
+
+  .ng-select .ng-select-container {
+    min-height: 28px!important;
+}
+
+.ng-select.ng-select-single .ng-select-container {
+    height: 28px;
+}
+
+.ng-option-label,.ng-option,.ng-option-disabled {
+    font-size: 12px!important;
+}

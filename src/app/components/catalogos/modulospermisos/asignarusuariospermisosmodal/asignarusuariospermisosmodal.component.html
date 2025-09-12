@@ -1,0 +1,116 @@
+<div class="modal-content">
+    <div class="modal-header header2">
+      <h6 class="modal-title" id="modal-title-console">ASIGNAR PERMISOS USUARIOS</h6>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="pl-lg-4">
+            <div class="row justify-content-md-center">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label"> Perfil </label>
+  
+                  <input class="form-control" type="text" id="perfil" name="perfil" [(ngModel)]="perfilform" readonly />
+                </div>
+              </div>
+            </div>
+  
+            <div class="row justify-content-md-center">
+              <div class="col-lg-5">
+                <div class="form-group">
+                  <label class="form-control-label"> Listado de usuarios </label>
+                  <form class="navbar-search navbar-search-light" id="navbar-search-main">
+                    <div class="form-group mb-0">
+                      <div class="input-group input-group-alternative input-group-merge">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+                        <input class="form-control" placeholder="Buscar" type="text"
+                          (keyup)="applyFilterUsuarios($event)" />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="container table-responsive">
+                  <table class="table align-items-center table-flush table-hover">
+                    <tbody class="list">
+                      <tr *ngFor="let user of users; let i = index" (click)="clickedRowsLU(user)"
+                        [class.row-is-clicked]="clickedRowsU.has(user)">
+                        <td>{{ user.nombres }}
+                          {{ user.apellidoPaterno }}
+                          {{ user.apellidoMaterno }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+  
+              <div class="col-lg-2">
+                <br />
+                <br />
+                <br />
+                <div class="block text-center">
+                  <button class="btn btn-icon btn-lg2 btn-secondary" type="button" (click)="allright()">
+                    <span class="btn-inner--icon"><i class="fas fa-angle-double-right"></i></span>
+                  </button>
+                </div>
+                <div class="block text-center">
+                  <button class="btn btn-icon btn-lg2 btn-secondary" type="button" (click)="multipleright()">
+                    <span class="btn-inner--icon"><i class="fas fa-angle-right"></i></span>
+                  </button>
+                </div>
+                <div class="block text-center">
+                  <button class="btn btn-icon btn-lg2 btn-secondary" type="button" (click)="multipleleft()">
+                    <span class="btn-inner--icon"><i class="fas fa-angle-left"></i></span>
+                  </button>
+                </div>
+                <div class="block text-center">
+                  <button class="btn btn-icon btn-lg2 btn-secondary" type="button" (click)="allleft()">
+                    <span class="btn-inner--icon"><i class="fas fa-angle-double-left"></i></span>
+                  </button>
+                </div>
+              </div>
+  
+              <div class="col-lg-5">
+                <div class="form-group">
+                  <label class="form-control-label"> Usuarios asignar </label>
+                  <form class="navbar-search navbar-search-light" id="navbar-search-main">
+                    <div class="form-group mb-0">
+                      <div class="input-group input-group-alternative input-group-merge">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+                        <input class="form-control" placeholder="Buscar" type="text"
+                          (keyup)="applyFilterUsuariosA($event)" />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="container table-responsive">
+                  <table class="table align-items-center table-flush table-hover">
+                    <tbody class="list">
+                      <tr *ngFor="let usuario of usuariosAsignadoss; let i = index" 
+                        (click)="clickedRowsLUA(usuario);"
+                        [class.row-is-clicked]="clickedRowsUA.has(usuario)">
+                        <td>{{ usuario.nombres }}
+                          {{ usuario.apellidoPaterno }}
+                          {{ usuario.apellidoMaterno }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">
+        CANCELAR
+      </button>
+      <button type="submit" class="btn btn-primary ml-auto" (click)="guardarAsignarUsuarios()">
+        GUARDAR
+      </button>
+    </div>
+  </div>

@@ -1,0 +1,65 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">{{IsEditing ? 'Editar':'Agregar'}} horario</h4>
+    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+        (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row rowHeaderRuta">
+        <div class="col-2">
+            <span>Dia</span>
+            <br>
+            <strong>{{Day}}</strong>
+        </div>
+    </div>
+    <br>
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-6">
+                <label>Inicio<span class="text-danger">*</span></label>
+                <div class="input-group m-0">
+                    <input type="text" autocomplete="off" class="form-control"
+                    (keypress) = "validateKeyPressTime($event)"
+                    (keyup) = "validateKeyUpTime($event,'From')"
+                    (keyup.enter)="editOrSaveSchedule()"
+                    [ngClass]="{'is-invalid': form.get('From')!.invalid && (form.get('From')!.dirty || form.get('From')!.touched) }"
+                    formControlName="From">
+                </div>
+                <small class="text-danger"
+                    *ngIf="form.get('From')!.invalid && (form.get('From')!.dirty || form.get('From')!.touched)">
+                    <ng-container *ngIf="form.get('From')?.errors">
+                        El campo es requerido.
+                    </ng-container>
+                </small>
+            </div>
+            <div class="col-6">
+                <label>Fin<span class="text-danger">*</span></label>
+                <div class="input-group m-0">
+                    <input type="text" autocomplete="off" class="form-control"
+                    (keypress) = "validateKeyPressTime($event)"
+                    (keyup) = "validateKeyUpTime($event,'To')"
+                    (keyup.enter)="editOrSaveSchedule()"
+                    [ngClass]="{'is-invalid': form.get('To')!.invalid && (form.get('To')!.dirty || form.get('To')!.touched) }"
+                    formControlName="To">
+                </div>
+                <small class="text-danger"
+                    *ngIf="form.get('To')!.invalid && (form.get('To')!.dirty || form.get('To')!.touched)">
+                    <ng-container *ngIf="form.get('To')?.errors">
+                        El campo es requerido.
+                    </ng-container>
+                </small>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" ngbAutofocus class="btn btn-light" (click)="modal.dismiss()">
+        Cancelar
+    </button>
+    <button type="button" class="btn btn-primary" (click)="editOrSaveSchedule()">
+        Aceptar
+    </button>
+</div>

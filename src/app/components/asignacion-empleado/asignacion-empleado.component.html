@@ -1,0 +1,158 @@
+<div class="header pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Prosazón Comisiones</h6>
+  
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a> <i class="fas fa-home"> </i> </a>
+                </li>
+  
+                <li aria-current="page" class="breadcrumb-item active">
+                  Asignación de empleados
+                </li>
+              </ol>
+            </nav>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Asignaciones de empleados a las sucursales</h3>
+                    <p class="text-sm mb-0">Listado de empleados y sus asignación a una sucursal</p>
+                </div>
+
+                <div class="row" style="margin-left: 15px;">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="form-group">
+                                    <label class="form-control-label"> Filtrado de empleados </label>
+                                        <ng-multiselect-dropdown
+                                        name="employee"
+                                        [placeholder]="'Selecciona empleados'"
+                                        [data]="employeeList"
+                                        formControlName="employee"
+                                        [disabled]="false"
+                                        [settings]="dropdownSettings"
+                                        (onSelect)="onItemSelect($event)"
+                                        (onDeSelect)="onItemDeSelect($event)">
+                                        </ng-multiselect-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <button class=" btn btn-primary btn-sm" type="button" (click)="getAllEmployeePaginated()" style="
+                                position: absolute;
+                                bottom: 30px;">
+                                    Aplicar filtro
+                                  </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" style="width: 22%;">Nombre completo</th>
+                                <th scope="col" style="width: 45%;">Asignado en</th>
+                                <th scope="col" style="width: 35%;">Periodo de asignación</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            <tr *ngFor="let record of employeeListPaginated; let i = index">
+                                <td>
+                                    <p>{{ record.fullName }} <small>({{ record.code }})</small></p>
+                                    <p style="margin-top: -25px; margin-bottom: 0px;"><small>{{ record.jobTitle }}</small></p>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div>
+                                                <small> Cliente </small>
+                                                <ng-select
+                                                [items]="dropdownData"
+                                                bindLabel="name"
+                                                (search)="onSearch($event)"
+                                                [searchable]="true"
+                                                placeholder="buscar..."
+                                                [clearable]="true"
+                                                [disabled] = "!enableEditing"
+                                                (change)="onCustomerChange(record)"
+                                                [(ngModel)] = "record.customerSelected"
+                                                [appendTo]="'body'">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div>
+                                                <small> Sucursal </small>
+                                                <select class="form-control form-control-xsm" data-toggle="select" style="margin-top: 0px;" 
+                                                        [disabled] = "!enableEditing" [(ngModel)] = "record.branchOfficeSelected">
+                                                <option selected disabled>Selecciona</option>
+                                                <option
+                                                *ngFor="let branchOffice of record.branchOfficeList"
+                                                [ngValue]="branchOffice.id"
+                                                >
+                                                {{ branchOffice.name }} ({{branchOffice.code}})
+                                                </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="position: relative;">
+                                        <div  [ngClass]="{ 'reasonSuccess': record.success, 'reasonFail': !record.success }" class="floating-reason" *ngIf="record.reason">{{record.reason}}</div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div>
+                                                    <small>desde</small>
+                                                    <input class="form-control form-control-xsm" style="margin-top: 0px;" type="date" min="2020-01-06" step="7" 
+                                                    [disabled] = "!enableEditing" [(ngModel)] = "record.beginPeriod">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div>
+                                                    <small>hasta</small>
+                                                    <input class="form-control form-control-xsm" style="margin-top: 0px;" type="date" min="2020-01-05" step="7"  
+                                                    [disabled] = "!enableEditing" [(ngModel)] = "record.endPeriod">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class=" modal-footer">
+                    <button class=" btn btn-primary btn-sm" type="button" (click)="setEnableEditing(true)" *ngIf="enableEditing == false">
+                      Habilitar para edición
+                    </button>
+        
+                    <button class=" btn btn-secondary btn-sm" type="button" (click)="setEnableEditing(false)" style="float: left;" *ngIf="enableEditing == true">
+                      Cancelar
+                    </button>
+                   <!-- We pass confirm param to save function, to determine if the attendance list will be confirmed or not -->
+                    <button class=" btn btn-primary btn-sm" type="button" (click)="saveEmployeeAsignation()" *ngIf="enableEditing == true">
+                      Guardar cambios
+                    </button>
+                </div>
+                  
+            </div>
+        </div>
+    </div>
+  </div>

@@ -1,0 +1,52 @@
+.entries-input {
+    width: 50px;
+}
+
+.header {
+    background-color: #1e88e5;;
+}
+
+.password-icon {
+    float: right;
+    position: relative;
+    margin: -30px 10px 0 0;
+    cursor: pointer;
+}
+
+a {
+    cursor: pointer;
+}
+
+.container {
+    max-height: 250px;
+    overflow: auto;
+    cursor: pointer;
+}
+
+.block {
+    display: block;
+    padding-bottom: 5%;
+}
+
+.btn-lg2 {
+    width: 50px;
+}
+
+.row-is-clicked {
+    color: #5E72E4;
+}
+
+.table>thead>tr>th {
+    overflow: hidden;
+    white-space: initial;
+
+}
+
+.table>tbody>tr>td {
+    overflow: hidden;
+    white-space: initial;
+}
+
+.table {
+    width: 100%;
+}

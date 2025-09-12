@@ -1,0 +1,33 @@
+.container {
+    max-height: 250px;
+    overflow: auto;
+    cursor: pointer;
+}
+
+.block {
+    display: block;
+    padding-bottom: 5%;
+}
+
+.btn-lg2 {
+    width: 50px;
+}
+
+.row-is-clicked {
+    color: #5E72E4;
+}
+
+.table>thead>tr>th {
+    overflow: hidden;
+    white-space: initial;
+
+}
+
+.table>tbody>tr>td {
+    overflow: hidden;
+    white-space: initial;
+}
+
+.table {
+    width: 100%;
+}

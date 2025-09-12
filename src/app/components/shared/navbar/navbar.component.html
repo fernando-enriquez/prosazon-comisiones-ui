@@ -1,0 +1,100 @@
+<nav class="navbar navbar-top navbar-expand navbar-dark border-bottom" style="background-color: #004B9C"
+  id="navbar-main">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Navbar links -->
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item d-xl-none">
+          <!-- Sidenav toggler -->
+          <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main"
+            (click)="openSidebar()">
+            <div class="sidenav-toggler-inner">
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <!-- Datepicker -->
+      <div *ngIf="datepicker" class="controlFechas">
+        <h2 class="h2fecha">
+          {{ textoFechaSistema }} &nbsp; <i class="fas fa-arrow-down"></i>
+        </h2>
+        <input type="text" class="inputControlFechas" bsDaterangepicker name="fecha" [(ngModel)]="bsRangeDate"
+          [bsConfig]="{
+            isAnimated: true,
+            containerClass: 'theme-dark-blue'
+          }" (ngModelChange)="onChangeF($event)" />
+      </div>
+      <!-- User -->
+      <ul class="navbar-nav align-items-center ml-auto ml-md-auto">
+        <li class="nav-item dropdown" dropdown placement="bottom-right">
+          <a class="nav-link pr-0 dropdown-toggle" role="button" dropdownToggle>
+            <div class="media align-items-center" style="cursor:pointer;">
+              <span class="avatar avatar-sm">
+                <img alt="Image placeholder" src="assets/img/theme/default.png" />
+              </span>
+              <div class="media-body ml-2 d-none d-lg-block">
+                <span class="mb-0 text-sm font-weight-bold">{{ nameuser }}</span>
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" *dropdownMenu>
+            <div class="dropdown-header noti-title">
+              <h6 class="text-overflow m-0">Opciones</h6>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="logout()"  style="cursor: pointer;">
+              <i class="ni ni-user-run"></i> <span>Cerrar sesión</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div *ngIf="sidenavOpen === true" class="backdrop d-xl-none" (click)="toggleSidenav()"></div>
+
+<div class="alertPopUpContainer">
+
+  <div class="timelineGlobalCon"  *ngFor="let alerta of ListaAlertas">
+    <div class="timeline timeline-one-side timelineGlobal"
+    data-timeline-axis-style="dashed"
+    data-timeline-content="axis">
+
+      <div class="timeline-block status-ok">
+        <span class="timeline-step badge-warning">
+        <i class="{{alerta.icon}}"></i>
+        </span>
+
+        <div class="timeline-content">
+          <div class="d-flex justify-content-between pt-1">
+            <div>
+              <span class="font-weight-bold">
+              {{alerta.nombreTipoAlerta}}
+              <small class="text-muted">
+              &nbsp; &nbsp; &nbsp;
+              <i class="fas fa-clock mr-1"> </i>{{alerta.horaAlerta}}
+              </small>
+              </span>
+            </div>
+          </div>
+          <h5 class="text-sm mt-1 mb-0">
+            {{alerta.description}}
+          </h5>
+          <h5 class="text-sm mt-1 mb-0" *ngIf="alerta.mostrarMotivo">
+            {{alerta.motivo}}
+          </h5>
+          <h6 class="text-sm mt-1 mb-0">
+          <span *ngFor="let attr of alerta.atributos">
+            {{attr}}
+            &nbsp;
+          </span>
+          </h6>
+        </div>
+      </div>
+    </div> 
+  </div>
+
+</div>

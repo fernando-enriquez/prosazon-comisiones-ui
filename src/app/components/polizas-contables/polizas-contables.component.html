@@ -1,0 +1,294 @@
+<div class="header pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Northware Utils</h6>
+
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item">
+                <a> <i class="fas fa-home"> </i> </a>
+              </li>
+
+              <li aria-current="page" class="breadcrumb-item active">
+                Polizas Contables
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">Polizas Contables</h3>
+          <p class="text-sm mb-0">Listado de Polizas</p>
+          <strong style="font-size: 13px" *ngIf="lastUpdate"
+            >Ultima actualización: {{ lastUpdate }}</strong
+          >
+        </div>
+
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="form-control-label"> Fecha de registro </label>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="input-group mb-3">
+                      <div class="input-group-append form-control-sm">
+                        <span class="input-group-text">Desde:</span>
+                      </div>
+                      <input
+                        [(ngModel)]="filter.fechaInicio"
+                        type="date"
+                        class="form-control form-control-sm"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="input-group mb-3">
+                      <div class="input-group-append form-control-sm">
+                        <span class="input-group-text">Hasta:</span>
+                      </div>
+                      <input
+                        [(ngModel)]="filter.fechaFin"
+                        type="date"
+                        class="form-control form-control-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="form-control-label">
+                  Filtra los resultados
+                </label>
+                <input
+                  type="text"
+                  id="txtBusqueda"
+                  placeholder="Introduce tu búsqueda"
+                  class="form-control form-control-sm"
+                  [(ngModel)]="filter.search"
+                />
+              </div>
+            </div>
+            <div class="col-sm-3 offset-sm-9">
+              <div class="text-right">
+                <br />
+                <button
+                  class="btn btn-sm btn-secondary"
+                  type="button"
+                  (click)="resetearRegistros()"
+                >
+                  Limpiar filtros
+                </button>
+                <button
+                  class="btn btn-sm btn-primary"
+                  type="button"
+                  (click)="obtenerRegistros()"
+                >
+                  Buscar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <br />
+
+          <div
+            class="table-responsive"
+            *ngIf="this.listaRegistrosTabla.length > 0"
+            style="padding-top: 1%"
+          >
+            <table class="table align-items-center table-flush table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Diario</th>
+                  <th scope="col">Número de lote del diario</th>
+                  <th scope="col">Tipo de diario</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+
+              <tbody
+                *ngFor="let registro of listaRegistrosTabla; let i = index"
+                class="list"
+              >
+                <tr>
+                  <td>{{ registro.diario }}</td>
+                  <td>{{ registro.noLoteDiario }}</td>
+                  <td>{{ registro.tipoDiario }}</td>
+                  <td>{{ registro.fecha }}</td>
+                  <td class="table-actions">
+                    <a
+                      class="table-action"
+                      tooltip="Líneas de diario"
+                      placement="top"
+                      (click)="diario(registro)"
+                    >
+                      <i class="fas fa-book" style="font-size: medium"> </i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            class="row"
+            *ngIf="this.listaRegistrosTabla.length == 0"
+            style="padding-top: 5%; width: 100%"
+          >
+            <div class="col-12">
+              <h3 class="text-center">No se encontraron registros</h3>
+            </div>
+          </div>
+
+          <div class="dataTables_wrapper py-4">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="dataTables_length">
+                  <label>
+                    Mostrar
+                    <input
+                      class="entries-input form-control form-control-sm"
+                      type="number"
+                      name="entries"
+                      [(ngModel)]="entries"
+                      (keyup)="entriesChange($event)"
+                      (change)="entriesChange($event)"
+                    />
+                    registros
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <nav>
+                  <ul class="pagination justify-content-end">
+                    <li class="cantidad-registros">
+                      {{ cantidadRegistros }} Registros
+                    </li>
+                    <!-- BOTON PRIMER PAGINA -->
+                    <li
+                      [ngClass]="{ disabled: filter.page === 1 }"
+                      class="page-item"
+                    >
+                      <a class="page-link" (click)="setPage(1)">
+                        <i class="fa fa-angle-left"></i>
+                        <span class="sr-only">First</span>
+                      </a>
+                    </li>
+                    <!-- BOTON PAGINA ANTERIOR-->
+                    <li
+                      [ngClass]="{ disabled: filter.page === 1 }"
+                      class="page-item"
+                    >
+                      <a class="page-link" (click)="setPage(filter.page - 1)">
+                        <i class="fa fa-angle-left"></i>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+
+                    <li>
+                      <div class="contenedor-paginacion">
+                        <li
+                          *ngFor="let page of pages.pages"
+                          [ngClass]="{ active: filter.page === page }"
+                          class="page-item"
+                        >
+                          <a class="page-link" (click)="setPage(page)">
+                            {{ page }}
+                          </a>
+                        </li>
+                      </div>
+                    </li>
+
+                    <li
+                      *ngIf="pages.totalPages - pages.startPage > 5"
+                      class="page-item"
+                    >
+                      <a
+                        class="page-link"
+                        (click)="setPage(pages.startPage + 5)"
+                      >
+                        ...
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="pages.totalPages - pages.startPage > 5"
+                      class="page-item"
+                    >
+                      <a class="page-link" (click)="setPage(pages.totalPages)">
+                        {{ pages.totalPages }}
+                      </a>
+                    </li>
+                    <li
+                      class="page-item"
+                      [ngClass]="{ disabled: filter.page === pages.totalPages }"
+                    >
+                      <a class="page-link" (click)="setPage(filter.page + 1)">
+                        <i class="fa fa-angle-right"></i>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                    <li
+                      class="page-item"
+                      [ngClass]="{ disabled: filter.page === pages.totalPages }"
+                    >
+                      <a class="page-link" (click)="setPage(pages.totalPages)">
+                        <i class="fa fa-angle-right"></i>
+                        <span class="sr-only">Last</span>
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" (click)="resetearRegistros()">
+                        <span class="btn-inner--icon">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-arrow-clockwise"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+                            />
+                            <path
+                              d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"
+                            />
+                          </svg>
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="line-scale-party"
+  [fullScreen]="true"
+>
+  <p style="color: white">Espere un monento...</p>
+</ngx-spinner>

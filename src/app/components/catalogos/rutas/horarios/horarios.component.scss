@@ -1,0 +1,147 @@
+.rowHeaderRuta{
+    font-size: .9em;
+    margin-top: -30px;
+}
+
+.modal-xlg .modal-dialog {
+    max-width: 85%!important;
+  }
+
+  .table-horarios thead th{
+    font-size: .9em!important;
+    text-align: center;
+  }
+
+  .table-horarios tbody td{
+    border-right: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .card-schedule{
+    width: 95%;
+    height: 44px;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.1);
+    position: relative;
+    margin-top: -15px;
+    animation: 1s ease-out 0s 1 slideInFromLeft;
+  }
+  
+
+  .card-schedule-add{
+    border: 1px solid rgba(170,170,170,1);
+    border-style: dashed solid;
+    height: 40px;
+    margin-top: -10px;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 1.2em;
+    text-align: center;
+    line-height: 40px;
+    opacity: 0;
+  }
+
+
+
+  .table-horarios tbody td:hover > .card-schedule-add{
+    opacity: 1;
+  }
+
+  .card-schedule-add:hover{
+    background: rgba(215, 231, 244,.3);
+  }
+
+  .card-schedule-text{
+    text-align: center;
+    font-size: 1.2em;
+    line-height: 44px;
+    height: inherit;
+  }
+
+  .card-schedule-options {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: none;
+     -webkit-transition: all 1s linear;
+    -moz-transition: all 1s linear;
+    -o-transition: all 1s linear;
+    transition: all 1s linear;
+    background: rgba(0,0,0,0.6);
+    color: rgba(255,255,255,.8);
+    text-align: center;
+}
+
+.card-schedule-option-button{
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 2px;
+    display: inline-block;
+    margin-top: 6px;
+    border: 1px solid white; 
+}
+
+.card-schedule-option-button + .card-schedule-option-button {
+  margin-left: 10px;
+}
+
+
+.card-schedule:hover > .card-schedule-options{
+    display: block;
+}
+
+.card-schedule-option-button:hover{
+    cursor: pointer;
+    color: rgba(255,255,255,1);
+}
+
+.table.align-items-center td, .table.align-items-center th {
+    vertical-align: top!important;
+}
+
+.fall {
+  animation: fallAway forwards 1s ease-out 1;
+}
+
+.table-responsive-no-scroll{
+  overflow-y: hidden!important;
+}
+
+@keyframes fallAway {
+  0% {
+    transform: rotateZ(0deg);
+    top: 0;
+    opacity: 1;
+  }
+  25% {
+    transform: rotateZ(-15deg);
+  }
+  100% {
+    top: 300px;
+    transform: rotateZ(-5deg);
+    opacity: 0;
+  }
+}
+
+.ngx-toastr {
+  width: 500px !important;  // Specify toastr-dialog width for all devices
+}
+
+.toast-title,.toast-message{
+  text-align: center;
+}
+
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+}
+100% {
+    opacity: 1;
+}
+}

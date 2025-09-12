@@ -1,0 +1,30 @@
+.header {
+    background-color: #1e88e5;;
+}
+
+.entries-input {
+    width: 50px;
+}
+
+a {
+    cursor:pointer;
+}
+
+.table>thead>tr>th {
+    overflow: hidden;
+    white-space: initial;
+
+}
+
+.table>tbody>tr>td {
+    overflow: hidden;
+    white-space: initial;
+}
+
+.table {
+    width: 100%;
+}
+
+.inputI:read-only {
+    background-color: #f6f9fc;
+}

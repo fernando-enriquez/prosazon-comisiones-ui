@@ -1,0 +1,35 @@
+.header {
+    background-color: #1e88e5;
+}
+
+.example-tree-invisible {
+    display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+.example-tree .mat-nested-tree-node .nested-node {
+    padding-left: 20px;
+}
+
+.example-tree .nested-node>.mat-tree-node {
+    padding-left: 20px;
+}
+
+a {
+    cursor: pointer;
+    padding: 1%;
+}
+
+table {
+    width: 100%;
+}
+
+.custom-checkbox {
+    zoom: 1.4;
+}

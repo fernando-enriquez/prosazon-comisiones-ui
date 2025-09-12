@@ -1,0 +1,238 @@
+<div class="header pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-12 col-12">
+            <h6 class="h2 text-white d-inline-block mb-0">
+              NayarBot
+            </h6>
+  
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a> <i class="fas fa-home"> </i> </a>
+                </li>
+  
+                <li class="breadcrumb-item active">Asignación Módulos Permisos</li>
+  
+                <li *ngIf="!usuarioStatus" aria-current="page" class="breadcrumb-item active">Perfil</li>
+                <li *ngIf="usuarioStatus" aria-current="page" class="breadcrumb-item active">
+                  Usuario
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Asignación módulos permisos</h3>
+            <p *ngIf="!usuarioStatus" class="text-sm mb-0"> Perfil</p>
+            <p *ngIf="usuarioStatus" class="text-sm mb-0"> Usuario</p>
+            <p *ngIf="!usuarioStatus" class="text-sm mb-0"> Nombre: {{ perfil != null ? perfil.nombre : "" }}</p>
+            <p *ngIf="usuarioStatus" class="text-sm mb-0"> Nombre: {{ usuario != null ? usuario.nombres : "" }} {{ usuario != null ? usuario.apellidoPaterno : "" }} {{ usuario != null ? usuario.apellidoMaterno : "" }} </p>
+          </div>
+          <div class="py-4">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                  MODULO
+                </th>
+                <td mat-cell *matCellDef="let data">
+                  <a
+                    placement="top"
+                    [style.visibility]="!data.expandable ? 'hidden' : ''"
+                    [style.marginLeft.px]="data.level * 32"
+                    (click)="treeControl.toggle(data)"
+                  >
+                    <i
+                      [class]="
+                        treeControl.isExpanded(data)
+                          ? 'fas fa-chevron-down'
+                          : 'fas fa-chevron-right'
+                      "
+                      style="font-size: medium"
+                    >
+                    </i>
+                  </a>
+  
+                  {{ data.nombre | uppercase }}
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="add">
+                <th mat-header-cell *matHeaderCellDef>
+                  AGREGAR
+                </th>
+                <td mat-cell *matCellDef="let data">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      class="custom-control-input"
+                      id="add{{ data.idModulo }}"
+                      type="checkbox"
+                      [(ngModel)]="data.agregar"
+                      [disabled]="!modificar"
+                      (click)="verC(data.idModulo)"
+                    />
+  
+                    <label class="custom-control-label" for="add{{ data.idModulo }}">
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef>
+                  BORRAR
+                </th>
+                <td mat-cell *matCellDef="let data">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      class="custom-control-input"
+                      id="delete{{ data.idModulo }}"
+                      type="checkbox"
+                      [(ngModel)]="data.borrar"
+                      [disabled]="!modificar"
+                      (click)="verC(data.idModulo)"
+                    />
+  
+                    <label class="custom-control-label" for="delete{{ data.idModulo }}">
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="update">
+                <th mat-header-cell *matHeaderCellDef>
+                  MODIFICAR
+                </th>
+                <td mat-cell *matCellDef="let data">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      class="custom-control-input"
+                      id="update{{ data.idModulo }}"
+                      type="checkbox"
+                      [(ngModel)]="data.modificar"
+                      [disabled]="!modificar"
+                      (click)="verC(data.idModulo)"
+                    />
+  
+                    <label class="custom-control-label" for="update{{ data.idModulo }}">
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="get">
+                <th mat-header-cell *matHeaderCellDef>
+                  VER
+                </th>
+                <td mat-cell *matCellDef="let data">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      class="custom-control-input"
+                      id="get{{ data.idModulo }}"
+                      type="checkbox"
+                      [(ngModel)]="data.ver"
+                      [disabled]="!modificar"
+                      (click)="verC(data.idModulo,1)"
+                    />
+  
+                    <label class="custom-control-label" for="get{{ data.idModulo }}">
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="header-row-modulo">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="text-align: center; border-bottom: 0px;"
+                >
+                  
+                </th>
+              </ng-container>
+  
+              <ng-container matColumnDef="header-row-permisos">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  [attr.colspan]="4"
+                  style="text-align: center"
+                >
+                  PERMISOS
+                </th>
+              </ng-container>
+  
+              <tr
+                mat-header-row
+                *matHeaderRowDef="['header-row-modulo', 'header-row-permisos']"
+              ></tr>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+          <nav>
+            <ul class="pagination justify-content-end">
+              <li class="page-item">
+                <a class="page-link" (click)="permisosT()">
+                  <span class="btn-inner--icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-arrow-clockwise"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+                      />
+                      <path
+                        d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="row">
+            <div class="col-lg-2">
+              <button
+                *ngIf="!modificar"
+                class="btn btn-primary"
+                type="submit"
+                (click)="modificarTabla()"
+              >
+                Modificar
+              </button>
+              <button
+                *ngIf="modificar"
+                class="btn btn-primary"
+                type="submit"
+                (click)="guardarTabla()"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ngx-spinner
+      bdColor="rgba(0, 0, 0, 0.8)"
+      size="large"
+      color="#fff"
+      type="ball-scale-multiple"
+      [fullScreen]="true"
+    ></ngx-spinner>
+  </div>  

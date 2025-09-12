@@ -1,0 +1,69 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Atributos de ruta</h4>
+    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+        (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row rowHeaderRuta">
+        <div class="col-2">
+            <span>Ruta</span>
+            <br>
+            <strong>{{Ruta.ruta}}</strong>
+        </div>
+        <div class="col-md-3">
+            <span>Tipo Ruta</span>
+            <br>
+            <strong>{{Ruta.tipoRuta}}</strong>
+        </div>
+        <div class="col-md-4">
+            <span>Responsable</span>
+            <br>
+            <strong>{{Ruta.responsable}}</strong>
+        </div>
+        <div class="col-md-3">
+            <span>CEDIS</span>
+            <br>
+            <strong>{{Ruta.cedis}}</strong>
+        </div>
+    </div>
+    <br><br>
+    <form [formGroup]="form">
+    <div class="row">
+        <div class="col-6">
+            <label>Tiempo maximo para confirmación de pedido</label>
+            <div class="input-group m-0">
+                <input type="text" autocomplete="off" class="form-control"
+                placeholder="hh:mm"
+                (keypress) = "validateKeyPressTime($event)"
+                (keyup) = "validateKeyUpTime($event,'MaxTimeCommit')"
+                (keyup.enter)="SaveParams()"
+                [ngClass]="{'is-invalid': form.get('MaxTimeCommit')!.invalid && (form.get('MaxTimeCommit')!.dirty || form.get('MaxTimeCommit')!.touched) }"
+                formControlName="MaxTimeCommit">
+            </div>
+        </div>
+        <div class="col-6">
+            <label>Tiempo maximo para entrega de pedido</label>
+            <div class="input-group m-0">
+                <input type="text" autocomplete="off" class="form-control"
+                placeholder="hh:mm"
+                (keypress) = "validateKeyPressTime($event)"
+                (keyup) = "validateKeyUpTime($event,'MaxTimeDelivery')"
+                (keyup.enter)="SaveParams()"
+                [ngClass]="{'is-invalid': form.get('MaxTimeDelivery')!.invalid && (form.get('MaxTimeDelivery')!.dirty || form.get('MaxTimeDelivery')!.touched) }"
+                formControlName="MaxTimeDelivery">
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+<div class="modal-footer">
+    <button type="button" ngbAutofocus class="btn btn-light" (click)="modal.dismiss()">
+        Cancelar
+    </button>
+    <button type="button" class="btn btn-primary" (click)="SaveParams()">
+        Aceptar
+    </button>
+</div>
