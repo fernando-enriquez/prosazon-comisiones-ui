@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NorthwareUtilsService } from 'src/app/services/northwareUtils.service';
-import { PaginacionService } from 'src/app/services/paginacion.service';
 import { PeticionesService } from 'src/app/services/peticiones.service';
 import { Papa } from 'ngx-papaparse';
 import { Subscription } from 'rxjs';
@@ -10,14 +9,16 @@ import Swal from 'sweetalert2';
 import { AttendanceSheetService } from 'src/app/services/apis/attendance-sheet.service';
 
 @Component({
-  selector: 'app-lista-negra',
-  templateUrl: './lista-negra.component.html',
-  styleUrls: ['./lista-negra.component.scss'],
+  selector: 'app-lista-asistencia',
+  templateUrl: './lista-asistencia.component.html',
+  styleUrls: ['./lista-asistencia.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ListaNegraComponent implements OnInit {
+export class ListaAsistenciaComponent implements OnInit {
 
-
+ @ViewChild('fileInput') fileInput!: ElementRef;
+ showFileInput = true;
+ 
   employeeList:any = [];
   asignacionList:any = [];
   listaAsistencia:any =[];
@@ -28,16 +29,19 @@ export class ListaNegraComponent implements OnInit {
   allRegistros: any[] = []; // Variable para asignar todos los registros de motivos no entrega en arreglo
   entries: number = 10; // Número de filas a mostrar en tabla responsables no visita
   enableEditing:boolean; //Controls whether the attendance list can be edited or not
+  registrosGuardar:any[] = [];
 
   selectedEmployee:any = [];
   dropdownSettings: any = {};//has the setting for employee´s ng multiselect
 
   form = false; // Variable boolean para mostrar formulario motivo no entrega
-  mostrarVentanaCarga = false; // Variable boolean para mostrar formulario agregar motivo no entrega
   rowsFound:number = -1;
   guardarButtonDisabled:boolean;
   cantidadRegistros:number;
   lastUpdate:string;
+  beginPlantilla:Date;
+  endPlantilla:Date;
+  showOperationButtons:boolean = true;
 
   currentYearComission:number = 2025;
   currentMothComission:number = 10;
@@ -108,27 +112,47 @@ export class ListaNegraComponent implements OnInit {
     }
   }
 
+    openFileForm() {
+    this.form = true;
+    this.showOperationButtons = false;
+    }
 
-    /**
-     * Función inicializar variables cada que se cierra o cancela el formulario
-     */
-    close() {
+    closeFileForm() {
     this.form = false;
+    this.showOperationButtons = true;
+      this.resetFileInput();
+      this.rowsFound = 0;
+      this.registrosGuardar = [];
+
+     setTimeout(function(){
+        document.body.click();
+      },10);
+    }
+
+    descargarExcel() {
+    const fileUrl = 'assets/plantillas/plantilla_asistencia_prosazon.xlsx';
+
+    // Crear un enlace temporal y simular clic para descargar
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = 'plantilla_asistencia_prosazon.xlsx'; // nombre con el que se descarga
+    link.click();
     }
 
     clickHandleFile(){
-      // this.spinner.show();
-      // var self = this;
-      // setTimeout(function(){
-      //   //self.spinner.hide();
-      // },10000);
+      this.spinner.show();
+      var self = this;
+      setTimeout(function(){
+        self.spinner.hide();
+      },10000);
     }
 
 
     async fileChangeEvent(event: any, type: any) {
+       this.spinner.hide();
       this.rowsFound = -1;
       this.guardarButtonDisabled = true;
-     // this.registrosGuardar = [];
+      this.registrosGuardar = [];
         if(!event){
           return;
         }
@@ -163,24 +187,44 @@ export class ListaNegraComponent implements OnInit {
 
           let options = {
             complete: (results, file) => {
-              // for (let index = 0; index < results.data.length; index++) {
-                for (let index = 0; index < results.data.length; index++) {
-                  let row = results.data[index];
-                  if(!row[1] || row[1] == "" || row[1].toLowerCase() == "rfc"){
-                    continue;
-                  }
+              debugger;
+              var realData = results.data.filter(x => x[0] != "");
+
+                for (let index = 3; index < realData.length; index++) {
+                  let row = realData[index];
+
                   let item = {
-                    Id:row[0],
-                    RFC: row[1],
-                    nombre:row[2],
-                    estatus:row[3]
+                    EmployeeCode:row[0],
+                    BranchOfficeCode: row[1],
+                    CommuteAmount:isNaN(parseFloat(row[2])) ? 0 : parseFloat(row[2]),
+                    Monday:row[3],
+                    Tuesday:row[4],
+                    Wednesday:row[5],
+                    Thursday:row[6],
+                    Friday:row[7],
+                    Saturday:row[8],
+                    Sunday:row[9],
                   }
-                  //this.registrosGuardar.push(item);
+
+                  this.registrosGuardar.push(item);
                 }
           
-                //this.rowsFound = this.registrosGuardar.length;
+                this.rowsFound = this.registrosGuardar.length;
+
+                //if there are rows to save continue automatically
                 if(this.rowsFound > 0){
-                  this.guardarButtonDisabled = false;
+                  this.validateAttendaceSheet();
+                }
+
+                //otherwise show no data found
+                else{
+                  this.resetFileInput();
+
+                  Swal.fire({
+                  icon: 'warning',
+                  title: "Archivo sin información",
+                  text: 'No se ha encontrado ninguna linea que corresponda a asistencias de empleados en el archivo subido',
+                  });
                 }
 
                 this.spinner.hide();
@@ -396,6 +440,7 @@ export class ListaNegraComponent implements OnInit {
 
       setPeriodDays()
       {
+        debugger;
         //reset
         this.periodControls = {
             Lun:false,
@@ -694,6 +739,168 @@ export class ListaNegraComponent implements OnInit {
           this.spinner.hide();
         }
       );
+      }
+
+      validateAttendaceSheet(){
+        debugger;
+        var periodSelected = this.datePeriods[this.periodComission];
+
+        var body = {
+          Attendances:this.registrosGuardar,
+          begin: periodSelected.Begin,
+          end: periodSelected.End
+        }
+        
+        this.spinner.show();
+
+        this.northwareUtilsService.validateAsistencia(body).subscribe((response) => {
+          this.resetFileInput();
+          this.spinner.hide();
+          
+          this.asignacionList = [];
+          this.listaAsistencia = [];
+          
+            this.asignacionList = response;
+
+            //two cases:
+
+            //all the assignations were found and they are valid
+            //paint the rows in the assitance table
+            if(this.asignacionList.filter(x => x.failed == true).length == 0){
+
+              this.closeFileForm
+              this.setPeriodDays();
+
+              this.asignacionList.forEach(element => {
+                      var asistencia = {
+                         AssingmentId:element.assingmentId,
+                         empleado:element.employee.fullName,
+                         cliente:element.branchOffice.customer.name,
+                         sucursal:element.branchOffice.name,
+                         status:element.status == "Confirmed" ? "Confirmada" : "En edición",
+                         AttendanceSheetId:element.attendanceSheetId,
+                         CommuteAmount:element.commuteAmount,
+                         Monday:element.monday,
+                         Tuesday:element.tuesday,
+                         Wednesday:element.wednesday,
+                         Thursday:element.thursday,
+                         Friday:element.friday,
+                         Saturday:element.saturday,
+                         Sunday:element.sunday
+                      }
+                      
+                      this.listaAsistencia.push(asistencia);
+                     });
+
+                     this.enableEditing = true;
+            }
+            //there is at least one failed assignation, could be wrong info or assignment not found
+            else{
+                  var table = this.generateFailedAssignmentsTable(this.asignacionList);
+                  Swal.fire({
+                  width: 900,
+                  title: "Listado de asistencia con errores",
+                  icon: "warning",
+                  html: `
+                  Las siguientes lineas del excel cuentan con información erronea o faltante, debes corregirla para poder continuar
+                  <br><br>
+                  ${table}
+                  `,
+                  showCloseButton: true,
+                  showCancelButton: false,
+                  focusConfirm: false,
+                  });
+            }
+        },
+        (err) => {
+          this.resetFileInput();
+          if (err.status != 401) {
+            this.peticionesService.onCancelPendingRequests();
+          }
+          if (err.status === 500) {
+            Swal.fire({
+            icon: 'warning',
+            title: 'Algo salió mal',
+            text: 'Contacte al administrador para solucionar el problemna',
+            });
+          } else {
+            console.log(err);
+          }
+            this.spinner.hide();
+        }
+      );
+      }
+
+      resetFileInput() {
+      this.showFileInput = false;
+      setTimeout(() => this.showFileInput = true, 0);
+      }
+
+      generateFailedAssignmentsTable(list: any[]) {
+
+        const style = `
+        <style>
+        .failed-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px; /* Subimos la fuente */
+        }
+
+        .failed-table th {
+        background-color: #004B9C; /* Azul */
+        color: white;
+        padding: 3px;
+        font-size: 15px;
+        text-align: left;
+        }
+
+        .failed-table td {
+        padding: 3px;
+        text-align: left;
+        border: 1px solid #ccc;
+        }
+
+        .failed-table tr:nth-child(even) {
+        background: #f5f5f5;
+        }
+        </style>
+        `;
+
+        // Encabezado de tabla
+        let table = `
+         ${style}
+        <table class="failed-table">
+        <thead>
+        <tr>
+          <th>Linea</th>
+          <th>Empleado</th>
+          <th>Sucursal</th>
+          <th>Razón</th>
+        </tr>
+        </thead>
+        <tbody>
+        `;
+ 
+        var excelLine = 8;
+        list.forEach(item => {
+        
+        if(item.failed){
+          table += `
+          <tr>
+          <td>${excelLine}</td>
+          <td>${item.failedAssignment.employee}</td>
+          <td>${item.failedAssignment.branchOffice}</td>
+          <td>${item.failedAssignment.reason}</td>
+          </tr>
+          `;
+        }
+        
+        excelLine++;
+        });
+
+        table += `</tbody></table>`;
+
+        return table;
       }
 
     }//end of class

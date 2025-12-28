@@ -103,3 +103,19 @@ p {
 .reasonFail{
     background-color: #e6380e;
 }
+
+.btn-delete-assignation{
+    position:absolute;
+    width:20px;
+    height:20px;
+    top: -50%;
+    right: 0;
+    text-align: center;
+    font-size: 15px;
+    color:#525f7fd4;
+    cursor: pointer;
+}
+
+.btn-delete-assignation:hover{
+    color:red;
+}

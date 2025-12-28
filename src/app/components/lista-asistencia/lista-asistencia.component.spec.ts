@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListaNegraComponent } from './lista-negra.component';
+import { ListaAsistenciaComponent } from './lista-asistencia.component';
 
-describe('ListaNegraComponent', () => {
-  let component: ListaNegraComponent;
-  let fixture: ComponentFixture<ListaNegraComponent>;
+describe('ListaAsistenciaComponent', () => {
+  let component: ListaAsistenciaComponent;
+  let fixture: ComponentFixture<ListaAsistenciaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListaNegraComponent ]
+      declarations: [ ListaAsistenciaComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListaNegraComponent);
+    fixture = TestBed.createComponent(ListaAsistenciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

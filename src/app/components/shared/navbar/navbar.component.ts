@@ -8,7 +8,6 @@ import {
   Location
 } from "@angular/common";
 import { Subscription } from "rxjs";
-import { DaterangeService } from "src/app/services/daterange.service";
 import jwt_decode from 'jwt-decode';
 import { ApiauthenticationService } from "../../../services/apiauthentication.service";
 import { PeticionesService } from "../../../services/peticiones.service"
@@ -53,7 +52,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     location: Location,
     private router: Router,
     private localeService: BsLocaleService,
-    private DateRangeService: DaterangeService,
     private apiauthenticationService: ApiauthenticationService,
     private route: ActivatedRoute,
     public peticionesService: PeticionesService,
@@ -207,10 +205,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangeF(event: any) {
-    this.textoFechaSistema = this.dias_semana[event[0].getDay()] + ', ' + event[0].getDate() + ' de ' + this.meses[event[0].getMonth()] + ' de ' + event[0].getUTCFullYear() + ' - ' + this.dias_semana[event[1].getDay()] + ', ' + event[1].getDate() + ' de ' + this.meses[event[1].getMonth()] + ' de ' + event[1].getUTCFullYear();
-    this.DateRangeService.changeDateRange(this.bsRangeDate);
-  }
 
   logout() {
     this.apiauthenticationService.logout();

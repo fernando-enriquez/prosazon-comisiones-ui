@@ -35,6 +35,10 @@ export class NorthwareUtilsService {
     return this.http.get(`${this.SERVER_API}/AttendanceSheet`);
   } 
 
+  public validateAsistencia(body:any){
+    return this.http.post(`${this.SERVER_API}/AttendanceSheet/validate`, body);
+  }
+
   public getTiposAsignacion()
   {
     return this.http.get(`${this.SERVER_API}/AttendanceType`);
@@ -50,6 +54,10 @@ export class NorthwareUtilsService {
 
   public saveAssignmentList(assignmentList:any){
     return this.http.post(`${this.SERVER_API}/Assignment`, assignmentList);
+  }
+
+  public removeAssignment(assignmentId){
+     return this.http.delete(`${this.SERVER_API}/Assignment/${assignmentId}`);
   }
 
   public getGeneralSetup(){

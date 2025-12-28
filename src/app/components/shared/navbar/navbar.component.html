@@ -16,17 +16,6 @@
           </div>
         </li>
       </ul>
-      <!-- Datepicker -->
-      <div *ngIf="datepicker" class="controlFechas">
-        <h2 class="h2fecha">
-          {{ textoFechaSistema }} &nbsp; <i class="fas fa-arrow-down"></i>
-        </h2>
-        <input type="text" class="inputControlFechas" bsDaterangepicker name="fecha" [(ngModel)]="bsRangeDate"
-          [bsConfig]="{
-            isAnimated: true,
-            containerClass: 'theme-dark-blue'
-          }" (ngModelChange)="onChangeF($event)" />
-      </div>
       <!-- User -->
       <ul class="navbar-nav align-items-center ml-auto ml-md-auto">
         <li class="nav-item dropdown" dropdown placement="bottom-right">

@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { debounceTime, switchMap, tap, finalize, Subject, Observable, of, skip } from 'rxjs';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import { assign } from 'underscore';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-asignacion-empleado',
@@ -40,7 +41,8 @@ export class AsignacionEmpleadoComponent implements OnInit {
   constructor(  private spinner: NgxSpinnerService, 
                 private apiService: NorthwareUtilsService, 
                 private route: ActivatedRoute, 
-                public requestService: PeticionesService ) 
+                public requestService: PeticionesService,
+                private cdr: ChangeDetectorRef ) 
                 {
                 }
 
@@ -289,6 +291,7 @@ export class AsignacionEmpleadoComponent implements OnInit {
   
 
   onSearch(searchTerm: any) {
+    debugger;
     console.log(searchTerm);
     if (searchTerm.term.length < 3) {
       this.dropdownData = [];
@@ -296,7 +299,8 @@ export class AsignacionEmpleadoComponent implements OnInit {
     }
 
     this.loading = true;
-    this.fetchData(searchTerm.term);
+    const searchText = searchTerm.term.toString().toLowerCase();
+    this.fetchData(searchText);
   }
 
   fetchData(searchTerm: string) {
@@ -309,8 +313,12 @@ export class AsignacionEmpleadoComponent implements OnInit {
       (params) => {
         this.apiService.getCustomers(searchTerm).subscribe(
           (data) => {
-              this.dropdownData = data;
+
+              this.dropdownData = []; // ← fuerza limpieza
+              setTimeout(() => this.dropdownData = data, 0);
               this.loading = false;
+              // Forzar detección de cambios
+              this.cdr.detectChanges();
           },
           (err) => {
             if (err.status != 401) {
@@ -367,6 +375,49 @@ export class AsignacionEmpleadoComponent implements OnInit {
         error: (error) => reject(error)
       });
     });
+  }
+
+  handleRemoveAssignation(id){
+    debugger;
+    var assignment = this.employeeListPaginated.filter(x => x.id == id);
+
+    if(assignment[0].assignmentId == "00000000-0000-0000-0000-000000000000"){
+      assignment[0].customerSelected = null;
+      assignment[0].branchOfficeSelected = null;
+      assignment[0].beginPeriod = null;
+      assignment[0].endPeriod = null;
+    }
+    else{
+      Swal.fire({
+             title: "Remover la asignación",
+             text: "¿Deseas remover la asignación para este empleado?",
+             icon: "question",
+             showCancelButton: true,
+             confirmButtonText: "Si, remover la asignación"
+           }).then((result) => {
+             if (result.isConfirmed) {
+               this.deleteAssignment(assignment[0].assignmentId);
+             }
+           });
+    }
+  }
+
+  deleteAssignment(assignmentId){
+      this.apiService.removeAssignment(assignmentId).subscribe({
+        next: (data) => {
+          debugger;
+          var assignment = this.employeeListPaginated.filter(x => x.assignmentId == assignmentId);
+
+          assignment[0].assignmentId = null;
+          assignment[0].customerSelected = null;
+          assignment[0].branchOfficeSelected = null;
+          assignment[0].beginPeriod = null;
+          assignment[0].endPeriod = null;
+        }, 
+        error: (error) => {
+        console.error('Error:', error);
+        }
+      });
   }
 }
 

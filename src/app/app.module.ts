@@ -16,12 +16,25 @@ import { SharedModule } from "./components/shared/shared.module";
 import { ToastrModule } from 'ngx-toastr';
 import { JwtInterceptorService } from './services/interceptors/jwt-interceptor.service';
 
+import {
+  MsalModule,
+  MsalService,
+  MsalGuard,
+  MsalInterceptor
+} from '@azure/msal-angular';
+
+import {
+  PublicClientApplication,
+  InteractionType
+} from '@azure/msal-browser';
+
 @NgModule({
   declarations: [
     AppComponent,
     AuthLayoutComponent,
     AdminLayoutComponent,
   ],
+  
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -37,6 +50,25 @@ import { JwtInterceptorService } from './services/interceptors/jwt-interceptor.s
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
+    MsalModule.forRoot(
+      new PublicClientApplication({
+        auth: {
+          clientId: 'b8ea74fe-d7ff-434a-8bf3-9557001dcd80',
+          authority: 'https://login.microsoftonline.com/1667dc1e-cbe9-458f-be80-7a82fa18ac93',
+          redirectUri: 'http://localhost:4200'
+        }
+      }),
+      {
+        interactionType: InteractionType.Redirect,
+        authRequest: {
+          scopes: ['User.Read']
+        }
+      },
+      {
+        interactionType: InteractionType.Redirect,
+        protectedResourceMap: new Map()
+      }
+    )
   ],
   providers: [
     {

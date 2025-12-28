@@ -105,7 +105,7 @@
                                                 *ngFor="let branchOffice of record.branchOfficeList"
                                                 [ngValue]="branchOffice.id"
                                                 >
-                                                {{ branchOffice.name }} ({{branchOffice.code}})
+                                                {{ branchOffice.name }}
                                                 </option>
                                                 </select>
                                             </div>
@@ -114,6 +114,9 @@
                                 </td>
                                 <td>
                                     <div style="position: relative;">
+                                        <div class="btn-delete-assignation" (click)="handleRemoveAssignation(record.id)" title="Eliminar asignación" *ngIf="record.assignmentId != '00000000-0000-0000-0000-000000000000' || record.customerSelected  || record.beginPeriod || record.endPeriod">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
                                         <div  [ngClass]="{ 'reasonSuccess': record.success, 'reasonFail': !record.success }" class="floating-reason" *ngIf="record.reason">{{record.reason}}</div>
                                         <div class="row">
                                             <div class="col-6">

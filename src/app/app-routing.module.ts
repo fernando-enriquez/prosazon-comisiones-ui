@@ -20,7 +20,7 @@ const routes: Routes = [
     children: [
       {
         path: "lista-asistencia",
-        loadChildren: () => import('./components/lista-negra/lista-negra.module').then(m => m.ListaNegraModule)
+        loadChildren: () => import('./components/lista-asistencia/lista-asistencia.module').then(m => m.ListaAsistenciaModule)
       },
       {
         path: "asignacion-empleado",

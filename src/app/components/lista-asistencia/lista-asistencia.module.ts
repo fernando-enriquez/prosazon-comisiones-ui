@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ListaNegraComponent } from './lista-negra.component';
+import { ListaAsistenciaComponent } from './lista-asistencia.component';
 import { RouterModule } from '@angular/router';
-import { ListaNegraRoutes } from './lista-negra.routing';
+import { ListaAsistenciaRoutes } from './lista-asistencia.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -18,11 +18,11 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 
 @NgModule({
-  declarations: [ListaNegraComponent],
+  declarations: [ListaAsistenciaComponent],
   imports: [
     CommonModule,
     NgSelectModule,
-    RouterModule.forChild(ListaNegraRoutes),
+    RouterModule.forChild(ListaAsistenciaRoutes),
     FormsModule,
     ReactiveFormsModule,
     TooltipModule.forRoot(),
@@ -35,6 +35,6 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     BsDatepickerModule.forRoot(),
     NgMultiSelectDropDownModule.forRoot()
   ],
-  exports:[ListaNegraComponent]
+  exports:[ListaAsistenciaComponent]
 })
-export class ListaNegraModule { }
+export class ListaAsistenciaModule { }
